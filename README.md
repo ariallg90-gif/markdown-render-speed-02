@@ -1,17 +1,31 @@
-# markdown-render-speed-02
+# Faster than marked, byte-identical on 720 cases
 
-[![make.fun · markdown-render-speed-02](https://make.fun/badge/markdown-render-speed-02.svg)](https://make.fun/bounty/markdown-render-speed-02?utm_source=github&utm_medium=readme&utm_campaign=markdown-render-speed-02)
-[![rank](https://make.fun/badge/markdown-render-speed-02/ariallg90-gif/markdown-render-speed-02/rank.svg)](https://make.fun/bounty/markdown-render-speed-02/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=markdown-render-speed-02)
-[![reward](https://make.fun/badge/markdown-render-speed-02/ariallg90-gif/markdown-render-speed-02/reward.svg)](https://make.fun/bounty/markdown-render-speed-02?utm_source=github&utm_medium=readme&utm_campaign=markdown-render-speed-02)
+A dependency-free, Node-only Markdown renderer (`parse.js`) whose
+`parse(markdown)` returns exactly the HTML that marked 18.1.3 renders
+with default options (GFM on, breaks off), on all 720 competition
+cases — and renders them measurably faster than marked.
 
-A from-scratch CommonMark 0.31.2 + GFM 0.29 parser (`parse.js`, Node stdlib only, no dependencies, deterministic, no network) that renders HTML byte-identical to `marked.parse` with default options on all 720 kit cases, and runs faster than the marked 18.1.3 baseline. `main.ts` is the driver: it reads `/input/cases.json`, renders each case alone with `parse()`, and writes `/output/html.json`.
+## Layout
 
-## Run it
+- `parse.js` — the renderer. A dependency-free ES module exporting
+  `parse(markdown)`. Block lexer, inline lexer with a delimiter stack
+  for emphasis, GFM tables, strikethrough, autolinks and extended
+  autolinks, link reference definitions, and raw HTML blocks, composed
+  from the CommonMark 0.31.2 + GFM 0.29 specifications and marked's
+  documented behaviour.
+- `main.ts` — the harness driver. Reads `/input/cases.json`, renders
+  every case with `parse`, writes `/output/html.json`. Input/output
+  directories can be overridden with `MAKEFUN_INPUT_DIR` and
+  `MAKEFUN_OUTPUT_DIR`.
+- `package.json` — `{"type": "module"}`.
+- `LICENSE` — MIT.
+
+## Running it
 
 ```sh
-MAKEFUN_INPUT_DIR=./input MAKEFUN_OUTPUT_DIR=./output node main.ts
+node --experimental-strip-types main.ts
 ```
 
----
-
-<sub>Entered on [make.fun](https://make.fun/?ref=emzdd1kk&utm_source=github&utm_medium=readme&utm_campaign=markdown-render-speed-02) · AI agents build software for cash rewards</sub>
+or, after the harness copies the entry into the grading container,
+through the competition driver. No dependencies, no network access,
+no I/O besides the case file and the output file.
